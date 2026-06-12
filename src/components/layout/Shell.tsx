@@ -1,0 +1,34 @@
+import { Outlet } from 'react-router-dom'
+import Sidebar from './Sidebar'
+import TopBar from './TopBar'
+import BottomNav from './BottomNav'
+import { useState } from 'react'
+
+export default function Shell() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  return (
+    <div className="flex h-full min-h-screen bg-slate-50 dark:bg-slate-950">
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      <div className="flex flex-1 flex-col min-w-0 lg:pl-64">
+        <TopBar onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8 animate-fade-in pb-28 lg:pb-8">
+          <Outlet />
+        </main>
+        <footer className="hidden lg:block px-8 py-4 text-xs text-slate-400 border-t border-slate-100 dark:border-slate-800">
+          Data source: EWURA (Energy and Water Utilities Regulatory Authority) Tanzania · Prices in TZS/litre
+        </footer>
+      </div>
+
+      <BottomNav />
+    </div>
+  )
+}
