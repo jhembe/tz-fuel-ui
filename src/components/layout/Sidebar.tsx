@@ -35,27 +35,45 @@ export default function Sidebar({ open: _open, onClose: _onClose, collapsed, onT
         collapsed ? 'w-16' : 'w-64'
       )}
     >
-      {/* Logo area */}
+      {/* Logo area + collapse toggle */}
       <div
         className={cn(
-          'flex items-center border-b border-white/10 shrink-0',
-          collapsed ? 'justify-center px-0 py-[1.125rem]' : 'justify-between px-6 py-5'
+          'flex border-b border-white/10 shrink-0',
+          collapsed ? 'flex-col items-center py-3 gap-2' : 'items-center justify-between px-6 py-5'
         )}
       >
         {collapsed ? (
-          <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
-            <Fuel size={18} className="text-white" />
-          </div>
-        ) : (
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center shrink-0">
+          <>
+            <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
               <Fuel size={18} className="text-white" />
             </div>
-            <div>
-              <p className="text-sm font-bold leading-none">TZ Fuel</p>
-              <p className="text-[10px] text-white/50 mt-0.5">Price Dashboard</p>
+            <button
+              onClick={onToggleCollapse}
+              title="Expand sidebar"
+              className="hidden lg:flex items-center justify-center w-8 h-8 rounded-xl text-white/40 hover:text-white hover:bg-white/10 transition-all duration-200"
+            >
+              <ChevronRight size={15} />
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center shrink-0">
+                <Fuel size={18} className="text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-bold leading-none">TZ Fuel</p>
+                <p className="text-[10px] text-white/50 mt-0.5">Price Dashboard</p>
+              </div>
             </div>
-          </div>
+            <button
+              onClick={onToggleCollapse}
+              title="Collapse sidebar"
+              className="hidden lg:flex items-center justify-center w-8 h-8 rounded-xl text-white/40 hover:text-white hover:bg-white/10 transition-all duration-200"
+            >
+              <ChevronLeft size={15} />
+            </button>
+          </>
         )}
       </div>
 
@@ -86,42 +104,18 @@ export default function Sidebar({ open: _open, onClose: _onClose, collapsed, onT
         ))}
       </nav>
 
-      {/* Bottom: data-source badge + collapse toggle */}
-      <div className="border-t border-white/10 shrink-0">
-        {!collapsed && (
-          <div className="px-4 pt-3">
-            <div className="rounded-xl bg-white/5 px-3 py-3">
-              <p className="text-[11px] font-semibold text-white/50 uppercase tracking-wider">
-                Data source
-              </p>
-              <p className="text-xs text-white/80 mt-1">EWURA official bulletins</p>
-              <p className="text-[11px] text-white/40 mt-0.5">2009 – present</p>
-            </div>
+      {/* Bottom: data-source badge */}
+      {!collapsed && (
+        <div className="border-t border-white/10 shrink-0 px-4 py-3">
+          <div className="rounded-xl bg-white/5 px-3 py-3">
+            <p className="text-[11px] font-semibold text-white/50 uppercase tracking-wider">
+              Data source
+            </p>
+            <p className="text-xs text-white/80 mt-1">EWURA official bulletins</p>
+            <p className="text-[11px] text-white/40 mt-0.5">2009 – present</p>
           </div>
-        )}
-
-        {/* Desktop collapse toggle */}
-        <div className={cn('py-3', collapsed ? 'flex justify-center' : 'px-4')}>
-          <button
-            onClick={onToggleCollapse}
-            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className={cn(
-              'hidden lg:flex items-center justify-center rounded-xl',
-              'text-white/40 hover:text-white hover:bg-white/10 transition-all duration-200',
-              collapsed ? 'w-10 h-10' : 'w-full px-3 py-2 gap-2 text-xs'
-            )}
-          >
-            {collapsed ? (
-              <ChevronRight size={16} />
-            ) : (
-              <>
-                <ChevronLeft size={14} />
-                <span>Collapse</span>
-              </>
-            )}
-          </button>
         </div>
-      </div>
+      )}
     </aside>
   )
 }

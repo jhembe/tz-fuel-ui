@@ -4,7 +4,7 @@ import StatCard from '../components/ui/StatCard'
 import { Spinner, SectionHeader } from '../components/ui/Spinner'
 import TrendAreaChart from '../components/charts/TrendAreaChart'
 import { fmtDate, fmtPrice, cleanDistrictName } from '../lib/utils'
-import { Fuel, TrendingUp, TrendingDown, Award, MapPin } from 'lucide-react'
+import { Fuel, TrendingUp, TrendingDown, Award, MapPin, Info } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
@@ -70,6 +70,18 @@ export default function Overview() {
         <StatCard label="National Kerosene Avg" value={stats?.kerosene.avg} change={keroChg}
           subtitle="vs last period" icon={<Fuel size={16} />} accentColor="#d97706" loading={sLoading} />
       </div>
+
+      {/* Government diesel subsidy notice */}
+      {stats?.effective_date && stats.effective_date >= '2026-06-03' && (
+        <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+          <Info size={16} className="mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+          <span>
+            <strong>Government diesel subsidy applied:</strong> The Tanzanian government is subsidising diesel by{' '}
+            <strong>TZS 534.91 per litre</strong> (effective 3 Jun 2026) to cushion the impact of global supply disruptions on transport and manufacturing.
+            Prices shown reflect this subsidy — actual market cost without subsidy would be ~TZS 535 higher per litre.
+          </span>
+        </div>
+      )}
 
       {/* Trend chart */}
       <div className="card">
