@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import { cn } from '../../lib/utils'
 
 export function Spinner({ className }: { className?: string }) {
@@ -16,7 +17,7 @@ export function ErrorCard({ message }: { message: string }) {
   )
 }
 
-export function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
+export function SectionHeader({ title, subtitle, action }: { title: React.ReactNode; subtitle?: string; action?: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between mb-5">
       <div>

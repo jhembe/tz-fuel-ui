@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Map, TrendingUp, BarChart3, Globe, List, GitCompare, BookOpen, MoreHorizontal, X } from 'lucide-react'
+import { LayoutDashboard, Map, TrendingUp, BarChart3, Globe, List, GitCompare, BookOpen, MoreHorizontal, X, FileText } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
 const PRIMARY = [
@@ -14,6 +14,7 @@ const MORE = [
   { to: '/regions',   icon: Globe,      label: 'Regions' },
   { to: '/districts', icon: List,       label: 'Districts' },
   { to: '/compare',   icon: GitCompare, label: 'Compare' },
+  { to: '/bulletins', icon: FileText,   label: 'Bulletins' },
   { to: '/docs',      icon: BookOpen,   label: 'API Docs' },
 ]
 
@@ -33,14 +34,14 @@ export default function BottomNav() {
       {/* Sheet overlay */}
       {open && (
         <div
-          className="lg:hidden fixed inset-0 z-30 bg-black/40 backdrop-blur-sm"
+          className="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
           onClick={() => setOpen(false)}
         />
       )}
 
       {/* More sheet — slides up from bottom */}
       <div className={cn(
-        'lg:hidden fixed left-0 right-0 z-40 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ease-out',
+        'lg:hidden fixed left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ease-out',
         open ? 'translate-y-0' : 'translate-y-full',
       )} style={{ bottom: 'calc(64px + env(safe-area-inset-bottom))' }}>
         {/* Handle */}
@@ -73,8 +74,8 @@ export default function BottomNav() {
       </div>
 
       {/* Bottom tab bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-100"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-slate-100 shadow-[0_-2px_12px_rgba(0,0,0,0.08)]"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)', touchAction: 'none' }}>
         <div className="flex">
           {PRIMARY.map(({ to, icon: Icon, label }) => (
             <NavLink

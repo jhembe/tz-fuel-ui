@@ -1,8 +1,42 @@
-import { useEffect, useRef } from 'react'
-import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet'
+import { useEffect } from 'react'
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap, Polygon } from 'react-leaflet'
 import { type PriceRecord } from '../../lib/api'
 import { getDistrictCoords } from '../../lib/districtCoords'
 import { fmtPrice, cleanDistrictName, type FuelType, priceToColor } from '../../lib/utils'
+
+// Tanzania mainland boundary (simplified ~35 points, clockwise)
+const TANZANIA_MAINLAND: [number, number][] = [
+  [-1.06, 30.47], [-1.00, 31.06], [-1.00, 34.00], [-1.00, 34.80],
+  [-1.22, 35.48], [-1.87, 37.10], [-1.62, 38.02], [-3.32, 38.36],
+  [-4.49, 39.40], [-5.20, 39.42], [-5.87, 39.33], [-6.87, 39.57],
+  [-7.88, 39.80], [-8.95, 39.87], [-10.47, 40.46], [-10.80, 40.45],
+  [-11.38, 38.36], [-11.60, 37.00], [-11.60, 35.56], [-11.48, 34.90],
+  [-11.28, 34.07], [-10.96, 33.60], [-10.00, 33.28], [-9.45, 32.97],
+  [-8.80, 31.08], [-8.00, 30.60], [-7.00, 29.80], [-6.30, 29.65],
+  [-5.45, 29.47], [-4.30, 29.40], [-3.82, 29.08], [-2.62, 29.02],
+  [-1.87, 29.58], [-1.28, 29.73], [-1.06, 30.47],
+]
+
+// Unguja (main Zanzibar island)
+const ZANZIBAR_UNGUJA: [number, number][] = [
+  [-5.72, 39.18], [-5.68, 39.55], [-5.97, 39.72],
+  [-6.20, 39.78], [-6.47, 39.57], [-6.48, 39.32],
+  [-6.18, 39.12], [-5.72, 39.18],
+]
+
+// Pemba island
+const PEMBA: [number, number][] = [
+  [-4.97, 39.67], [-4.97, 39.90], [-5.35, 40.02],
+  [-5.48, 39.78], [-5.30, 39.62], [-4.97, 39.67],
+]
+
+// Large world polygon — the outer ring of the inverted mask
+const WORLD_RING: [number, number][] = [
+  [-90, -180], [-90, 180], [90, 180], [90, -180], [-90, -180],
+]
+
+// Tanzania bounds with a small buffer
+const TZ_BOUNDS: [[number, number], [number, number]] = [[-13, 28], [0, 42]]
 
 interface Props {
   prices: PriceRecord[]
@@ -13,7 +47,10 @@ interface Props {
 function BoundsAdjuster() {
   const map = useMap()
   useEffect(() => {
-    map.setView([-6.369, 34.888], 6)
+    const isMobile = window.innerWidth < 768
+    map.setView([-6.369, 34.888], isMobile ? 5 : 6)
+    map.setMaxBounds(TZ_BOUNDS)
+    map.setMinZoom(5)
   }, [map])
   return null
 }
@@ -37,16 +74,34 @@ export default function PriceMap({ prices, fuel, onDistrictClick }: Props) {
     <MapContainer
       center={[-6.369, 34.888]}
       zoom={6}
+      minZoom={5}
+      maxBounds={TZ_BOUNDS}
+      maxBoundsViscosity={1.0}
       style={{ height: '100%', width: '100%', borderRadius: '1rem', minHeight: 420 }}
       scrollWheelZoom={true}
       className="z-0"
     >
       <BoundsAdjuster />
+
+      {/* Base map — subtle light tiles for context inside Tanzania */}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         maxZoom={19}
       />
+
+      {/* Inverted mask — white overlay covering everything outside Tanzania */}
+      <Polygon
+        positions={[WORLD_RING, TANZANIA_MAINLAND, ZANZIBAR_UNGUJA, PEMBA]}
+        pathOptions={{
+          fillColor: '#f8fafc',
+          fillOpacity: 1,
+          stroke: false,
+          fillRule: 'evenodd',
+        }}
+      />
+
+      {/* District markers */}
       {mapped.map(p => {
         const color = priceToColor(p.price, min, max)
         const isCheap = p.price <= min + (max - min) * 0.25

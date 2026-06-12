@@ -144,13 +144,43 @@ export interface ForecastPoint {
 
 export interface ForecastResponse {
   model: string
+  model_aic: number | null
+  model_comparison: Record<string, { aic: number | null; r_squared: number | null; converged: boolean; selected: boolean; note?: string; error?: string }>
   periods_used: number
   from_date: string; to_date: string
   avg_period_days: number
   r_squared: Record<string, number>
   trend_direction: Record<string, string>
+  brent_last_known: number | null
+  brent_forecast_inputs: number[] | null
   forecast: ForecastPoint[]
   disclaimer: string
+}
+
+export interface BrentPoint {
+  price_date: string
+  price_usd: number
+}
+
+export interface BrentResponse {
+  count: number
+  from_date: string
+  to_date: string
+  latest_price_usd: number
+  series: BrentPoint[]
+}
+
+export interface DocumentEntry {
+  effective_date: string
+  pdf_url: string | null
+  records_imported: number
+  synced_at: string
+  has_local_pdf: boolean
+}
+
+export interface DocumentsResponse {
+  total: number
+  documents: DocumentEntry[]
 }
 
 export interface RegionalSummaryEntry {
@@ -233,4 +263,15 @@ export const api = {
 
   regionalSummary: (date?: string) =>
     get<RegionalSummaryResponse>('/v1/analytics/regional-summary', { date }),
+
+  brent: () =>
+    get<BrentResponse>('/v1/analytics/brent'),
+
+  documents: () =>
+    get<DocumentsResponse>('/v1/documents'),
+
+  pdfUrl: (date: string) => {
+    const base = import.meta.env.VITE_API_URL ?? '/api'
+    return `${base}/v1/documents/${date}/pdf`
+  },
 }

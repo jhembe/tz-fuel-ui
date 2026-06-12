@@ -8,6 +8,7 @@ import Regions from './pages/Regions'
 import Districts from './pages/Districts'
 import Compare from './pages/Compare'
 import Docs from './pages/Docs'
+import Documents from './pages/Documents'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="regions/:region/:district" element={<Regions />} />
           <Route path="districts" element={<Districts />} />
           <Route path="compare" element={<Compare />} />
+          <Route path="bulletins" element={<Documents />} />
           <Route path="docs" element={<Docs />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
