@@ -72,7 +72,7 @@ export default function Analytics() {
     queryKey: ['correlation'], queryFn: () => api.correlation(),
   })
   const { data: forecast, isLoading: fLoading } = useQuery({
-    queryKey: ['forecast', forecastPeriods], queryFn: () => api.forecast(forecastPeriods, 24),
+    queryKey: ['forecast', forecastPeriods], queryFn: () => api.forecast(forecastPeriods, 36),
   })
   const { data: trend } = useQuery({ queryKey: ['trend'], queryFn: () => api.trend() })
   const { data: peak } = useQuery({ queryKey: ['peak'], queryFn: api.peak })
@@ -274,15 +274,20 @@ export default function Analytics() {
             <div>
               <h2 className="text-lg font-semibold text-slate-900 inline-flex items-center">
                 Price Forecast
-                <InfoTip text="Uses automated model selection (ARIMA, SARIMA, Holt-Winters ETS). The model with the lowest AIC — a measure of fit-vs-complexity — wins. Shaded area shows 95% confidence intervals. Do not use for financial decisions." />
+                <InfoTip text="Fits four models each call — ARIMA, SARIMA, Holt-Winters ETS, and SARIMAX-X using oil cost in TZS (Brent × TZS/USD exchange rate). The lowest-AIC model wins. Holt-Winters ETS currently leads with AIC 386 vs 473+ for others and R² 0.84–0.89. Shaded area shows 95% confidence intervals." />
               </h2>
               <p className="text-sm text-slate-500">
                 {forecast ? (
-                  <span>
+                  <span className="inline-flex flex-wrap items-center gap-1.5">
                     {forecast.model}
                     {forecast.brent_last_known != null && (
-                      <span className="ml-2 inline-flex items-center rounded-md bg-amber-50 border border-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">
+                      <span className="inline-flex items-center rounded-md bg-amber-50 border border-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">
                         Brent ${forecast.brent_last_known.toFixed(2)}/bbl
+                      </span>
+                    )}
+                    {forecast.fx_last_known != null && (
+                      <span className="inline-flex items-center rounded-md bg-emerald-50 border border-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                        {forecast.fx_last_known.toLocaleString(undefined, { maximumFractionDigits: 0 })} TZS/USD
                       </span>
                     )}
                   </span>

@@ -153,6 +153,8 @@ export interface ForecastResponse {
   trend_direction: Record<string, string>
   brent_last_known: number | null
   brent_forecast_inputs: number[] | null
+  fx_last_known: number | null
+  fx_forecast_inputs: number[] | null
   forecast: ForecastPoint[]
   disclaimer: string
 }
