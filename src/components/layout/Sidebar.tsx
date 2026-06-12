@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Map, TrendingUp, BarChart3, Globe, List, GitCompare,
-  BookOpen, Fuel, X, ChevronLeft, ChevronRight, FileText,
+  BookOpen, Fuel, ChevronLeft, ChevronRight, FileText,
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
@@ -24,15 +24,14 @@ interface Props {
   onToggleCollapse: () => void
 }
 
-export default function Sidebar({ open, onClose, collapsed, onToggleCollapse }: Props) {
+export default function Sidebar({ open: _open, onClose: _onClose, collapsed, onToggleCollapse }: Props) {
   return (
     <aside
       className={cn(
-        'fixed inset-y-0 left-0 z-30 flex flex-col',
+        'hidden lg:flex',
+        'fixed inset-y-0 left-0 z-30 flex-col',
         'bg-[#0f2937] text-white',
         'transition-all duration-300 ease-in-out',
-        'lg:translate-x-0',
-        open ? 'translate-x-0' : '-translate-x-full',
         collapsed ? 'w-16' : 'w-64'
       )}
     >
@@ -48,23 +47,15 @@ export default function Sidebar({ open, onClose, collapsed, onToggleCollapse }: 
             <Fuel size={18} className="text-white" />
           </div>
         ) : (
-          <>
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center shrink-0">
-                <Fuel size={18} className="text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-bold leading-none">TZ Fuel</p>
-                <p className="text-[10px] text-white/50 mt-0.5">Price Dashboard</p>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center shrink-0">
+              <Fuel size={18} className="text-white" />
             </div>
-            <button
-              onClick={onClose}
-              className="lg:hidden p-1 rounded-lg hover:bg-white/10 transition-colors"
-            >
-              <X size={16} />
-            </button>
-          </>
+            <div>
+              <p className="text-sm font-bold leading-none">TZ Fuel</p>
+              <p className="text-[10px] text-white/50 mt-0.5">Price Dashboard</p>
+            </div>
+          </div>
         )}
       </div>
 
@@ -75,7 +66,7 @@ export default function Sidebar({ open, onClose, collapsed, onToggleCollapse }: 
             key={to}
             to={to}
             end={to === '/'}
-            onClick={onClose}
+            onClick={_onClose}
             title={collapsed ? label : undefined}
             className={({ isActive }) =>
               cn(

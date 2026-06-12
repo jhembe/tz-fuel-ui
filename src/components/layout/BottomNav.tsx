@@ -74,7 +74,7 @@ export default function BottomNav() {
       </div>
 
       {/* Bottom tab bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-slate-100 shadow-[0_-2px_12px_rgba(0,0,0,0.08)]"
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-[0_-1px_8px_rgba(0,0,0,0.07)]"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)', touchAction: 'none' }}>
         <div className="flex">
           {PRIMARY.map(({ to, icon: Icon, label }) => (
@@ -83,17 +83,17 @@ export default function BottomNav() {
               to={to}
               end={to === '/'}
               className={({ isActive }) => cn(
-                'flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors',
+                'flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] font-semibold transition-colors',
                 isActive ? 'text-brand-500' : 'text-slate-400'
               )}
             >
               {({ isActive }) => (
                 <>
                   <span className={cn(
-                    'flex items-center justify-center w-7 h-7 rounded-xl transition-all',
+                    'flex items-center justify-center w-6 h-6 rounded-lg transition-all',
                     isActive ? 'bg-brand-500/10' : ''
                   )}>
-                    <Icon size={18} />
+                    <Icon size={17} />
                   </span>
                   {label}
                 </>
@@ -105,15 +105,15 @@ export default function BottomNav() {
           <button
             onClick={() => setOpen(v => !v)}
             className={cn(
-              'flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors',
+              'flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] font-semibold transition-colors',
               moreActive || open ? 'text-brand-500' : 'text-slate-400'
             )}
           >
             <span className={cn(
-              'flex items-center justify-center w-7 h-7 rounded-xl transition-all',
+              'flex items-center justify-center w-6 h-6 rounded-lg transition-all',
               (moreActive || open) ? 'bg-brand-500/10' : ''
             )}>
-              <MoreHorizontal size={18} />
+              <MoreHorizontal size={17} />
             </span>
             More
           </button>
